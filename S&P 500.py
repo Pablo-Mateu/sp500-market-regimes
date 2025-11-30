@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+
 # Importamos el DataFrame
 df = pd.read_csv("SPX.csv")
 
@@ -14,4 +15,11 @@ df["Date"] = pd.to_datetime(df["Date"])
 
 print(df.describe())
 
-plt.plotfhiglhjñklgbñkjhvñk
+fig, ax = plt.subplots(figsize=(12, 6))
+
+ax.plot(df["Date"], df["Close"])
+
+ax.set_title("Precio histórico del S&P 500")
+ax.set_xlabel("Fecha")
+ax.set_ylabel("Precio de cierre")
+plt.show()
