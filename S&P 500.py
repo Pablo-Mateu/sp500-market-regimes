@@ -14,4 +14,4 @@ df["Date"] = pd.to_datetime(df["Date"])
 
 print(df.describe())
 
-plt.plot
+plt.plotfhiglhjñklgbñkjhvñk
