@@ -17,10 +17,10 @@ Instead of trying to predict the exact price of tomorrow, we focus on identifyin
 ## 🗂️ Project Structure
 ```text
 sp500-market-regimes/
-├── data/                # Raw and processed datasets (CSV)
-├── notebooks/           # Jupyter Notebooks for analysis and modeling
-│   ├── 01_EDA.ipynb     # Exploratory Data Analysis & Feature Engineering
-│   └── 02_Modeling.ipynb # K-Means & HMM Implementation (In Progress)
-├── src/                 # Helper scripts and functions
-├── images/              # Plots and result visualizations
-└── README.md            # Project documentation
+├── data/                       # Raw and processed datasets (CSV)
+├── notebooks/                  # Jupyter Notebooks for analysis and modeling
+│   ├── 01_EDA.ipynb            # Exploratory Data Analysis & Feature Engineering
+│   └── 02_HMM_Modeling.ipynb   # K-Means & HMM Implementation (In Progress)
+├── src/                        # Helper scripts and functions
+├── images/                     # Plots and result visualizations
+└── README.md                   # Project documentation
