@@ -2,41 +2,44 @@
 
 ## 🎯 Project Overview
 
-This project implements an advanced **Hidden Markov Model with Gaussian Mixtures (GMMHMM)** to identify and characterize the **three principal market regimes** (Bull, Bear, and Transition) within the S&P 500 index. The analysis provides a robust, data-driven framework for **dynamic risk management** by explicitly recognizing the **risk asymmetry** inherent in financial markets (i.e., crashes are more volatile than rallies).
+This project employs an advanced, unsupervised **Hidden Markov Model with Gaussian Mixtures (GMMHMM)** to identify and analyze the **three principal market regimes** (Bull, Bear, and Transition) within the S&P 500 index. The analysis provides a data-driven framework for **dynamic risk management** by explicitly modeling the **asymmetry of risk** observed in real-world finance.
 
 ## 🛠️ Methodology and Model Architecture
 
-The GMMHMM architecture was specifically chosen and configured to handle complex financial data characteristics:
+The GMMHMM architecture was custom-built to handle key financial data characteristics:
 
-| Parameter | Value | Financial Justification |
+| Parameter | Value | Financial Rationale |
 | :--- | :--- | :--- |
-| **Core Model** | GMMHMM (Gaussian Mixture) | Necessary to model the non-normal distribution of returns and **Fat Tails** (leptokurtosis). |
-| **N Components (K)** | 3 | Allows for the economic distinction between **Growth (Bull)**, **Panic (Bear)**, and **Uncertainty (Transition)**. |
-| **Covariance Type** | 'full' | **CRITICAL:** Enables the model to capture the negative correlation between returns and volatility, known as the **Leverage Effect**. |
+| **Model Type** | GMMHMM (K=3, M=2) | Used two Gaussian components (`M=2`) per regime to model **Fat Tails** in return distribution. |
+| **Covariance Type** | 'full' | **CRITICAL:** Enables the model to capture the negative correlation between returns and volatility (**Leverage Effect**), crucial for defining the Bear regime. |
 | **Features Used** | Log Return, Volatility (21d), Momentum (126d) | Captures directional change, short-term risk, and long-term trend. |
-| **Reproducibility** | `np.random.seed(123)` | Ensures the regime assignments (0, 1, 2) are deterministic across all runs. |
+| **Reproducibility** | `np.random.seed(123)` | Ensures the stability and deterministic assignment of regimes across all runs. |
 
 ## ✅ Key Findings and Actionable Conclusions
 
-The model successfully separates market history into distinct states, yielding valuable insights:
+The model successfully separates market history into three distinct states, validated by both statistical properties and historical events.
 
-### 1. Market Asymmetry and Validation
+### 1. Regime Characterization and Asymmetry
 
-The model validates the core tenet of market risk: **"The market goes up the stairs and down the elevator."**
+The analysis confirms a clear distinction in the volatility-return trade-off:
 
-| Regime | Risk Profile | Volatility (Risk) | Return (Reward) |
+| Regime | Risk Profile | Volatility (Annualized) | Expected Return |
 | :--- | :--- | :--- | :--- |
-| **Bull (Growth)** | **Optimal** | **LOWEST** ($\approx 9.6\%$ annualized) | HIGHEST (Positive) |
-| **Bear (Panic)** | **Extreme** | **HIGHEST** ($\approx 23.7\%$ annualized) | Negative |
+| **Bull (0)** | **Optimal** | **LOWEST** (e.g., $\approx 9.6\%$ ) | HIGHEST (Positive) |
+| **Bear (1)** | **Extreme Risk** | **HIGHEST** (e.g., $\approx 23.7\%$ ) | Negative |
+| **Transition (2)** | Poor/Neutral | Medium | Near Zero |
 
-### 2. Regime Persistence
+### 2. Regime Persistence and Duration
 
-Analysis of the Transition Matrix (`model.transmat_`) reveals the expected duration of each state, providing a crucial timescale for strategizing:
+Analysis of the fitted Transition Matrix provides a clear timescale for risk management decisions:
 
-* **Bull Regime Duration:** $\approx 66$ trading days on average.
-* **Bear Regime Duration:** $\approx 57$ trading days on average.
+| Regime | Persistence (Pii) | Expected Duration |
+| :--- | :--- | :--- |
+| **Bull** | $98.48\%$ | **$\approx 66$ trading days** |
+| **Bear** | $98.25\%$ | **$\approx 57$ trading days** |
+| **Transition** | $97.94\%$ | $\approx 49$ trading days |
 
-**Conclusion for Strategy:** When the model signals a switch to the Bear regime, portfolio managers are advised to immediately reduce risk exposure and maintain a defensive posture, as the high-risk state is statistically expected to persist for nearly two months.
+**Conclusion for Strategy:** The model shows that once the market enters the high-risk Bear regime, it is expected to persist for approximately two to three months. This dictates that risk mitigation strategies (hedging, reducing exposure) must be maintained over this timescale.
 
 ---
 
@@ -44,5 +47,5 @@ Analysis of the Transition Matrix (`model.transmat_`) reveals the expected durat
 
 The analysis is conducted sequentially across the following Jupyter Notebooks:
 
-1.  **`01_EDA.ipynb`:** Data loading, cleaning, and financial feature engineering (Log Returns, Volatility, Momentum).
-2.  **`02_HMM_Modeling.ipynb`:** Contains the model setup, training, Viterbi decoding (inference), regime validation, and the final visualization of the S&P 500 price colored by its inferred regime.
+1.  **`01_EDA.ipynb`:** Data loading, cleaning, feature engineering, and crucial **stationarity testing** (ADF test) to prepare data for time- series modeling.
+2.  **`02_HMM_Modeling.ipynb`:** Model configuration, training, Viterbi decoding (inference), regime validation, **transition matrix analysis**, and the final visualization of the S&P 500 price colored by its inferred regime.
